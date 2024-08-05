@@ -1,7 +1,7 @@
 class Node {
-  constructor() {
-    this.value = null;
-    this.nextNode = null;
+  constructor(value = null) {
+    this.value = value;
+    this.next = null;
   }
 }
 
@@ -12,9 +12,27 @@ class LinkedList {
     this.size = 0;
   }
 
-  append(value) {}
+  append(value) {
+    const node = new Node(value);
+    if (this.tail) {
+      this.tail.next = node;
+      this.tail = node;
+    }
+    if (!this.head) {
+      this.head = node;
+      this.tail = node;
+    }
+  }
 
-  prepend(value) {}
+  prepend(value) {
+    const node = new Node(value);
+    if (this.head) {
+      node.next = this.head;
+    } else {
+      this.tail = node;
+    }
+    this.head = node;
+  }
 
   at(index) {}
 
@@ -28,16 +46,25 @@ class LinkedList {
 
   find(value) {}
 
-  toString() {}
+  toString() {
+    let out = '';
+    let curr = this.head;
+    while (curr) {
+      out += `( ${curr.value} ) -> `;
+      curr = curr.next;
+    }
+    out += 'null';
+    return out;
+  }
 }
 
-// const list = new LinkedList();
+const list = new LinkedList();
 
-// list.append("dog");
-// list.append("cat");
-// list.append("parrot");
-// list.append("hamster");
-// list.append("snake");
-// list.append("turtle");
+list.append('dog');
+list.append('cat');
+list.append('hamster');
+list.append('snake');
+list.prepend('turtle');
+list.prepend('parrot');
 
-// console.log(list.toString());
+console.log(list.toString());
