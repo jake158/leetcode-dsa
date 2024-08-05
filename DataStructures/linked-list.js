@@ -22,6 +22,7 @@ class LinkedList {
       this.head = node;
       this.tail = node;
     }
+    this.size++;
   }
 
   prepend(value) {
@@ -32,19 +33,59 @@ class LinkedList {
       this.tail = node;
     }
     this.head = node;
+    this.size++;
   }
 
-  at(index) {}
+  at(index) {
+    let currPos = 0;
+    let curr = this.head;
+    while (currPos < index) {
+      curr = curr.next;
+      currPos++;
+    }
+    return curr;
+  }
 
-  insertAt(value, index) {}
+  pop() {
+    let curr = this.head;
+    if (!curr) return;
 
-  removeAt(index) {}
+    while (curr.next && curr.next != this.tail) {
+      curr = curr.next;
+    }
+    curr.next = null;
+    this.tail = curr;
 
-  pop() {}
+    if (this.size === 1) {
+      this.head = null;
+      this.tail = null;
+    }
+    this.size--;
+  }
 
-  contains(value) {}
+  contains(value) {
+    let curr = this.head;
+    while (curr) {
+      if (curr.value === value) {
+        return true;
+      }
+      curr = curr.next;
+    }
+    return false;
+  }
 
-  find(value) {}
+  find(value) {
+    let curr = this.head;
+    let index = 0;
+    while (curr) {
+      if (curr.value === value) {
+        return index;
+      }
+      index++;
+      curr = curr.next;
+    }
+    return null;
+  }
 
   toString() {
     let out = '';
@@ -68,3 +109,4 @@ list.prepend('turtle');
 list.prepend('parrot');
 
 console.log(list.toString());
+console.log(list.find('snake'));
