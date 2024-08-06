@@ -1,16 +1,20 @@
 class HashMap {
   constructor() {
-    this.buckets = [];
     this.size = 16;
+    this.itemsStored = 0;
     this.loadFactor = 0.75;
+    this.#initializeBuckets();
+  }
 
+  #initializeBuckets() {
+    this.buckets = [];
     for (let i = 0; i < this.size; i++) {
       // Let's pretend these are linked lists
       this.buckets.push([]);
     }
   }
 
-  hash(key) {
+  #hash(key) {
     let hashCode = 0;
     const primeNumber = 31;
     for (let i = 0; i < key.length; i++) {
@@ -19,27 +23,54 @@ class HashMap {
     return hashCode;
   }
 
+  #getBucket(forKey) {
+    const index = this.#hash(forKey) % this.size;
+    return this.buckets[index];
+  }
+
   set(key, value) {
-    const index = this.hash(key) % this.size;
-    const bucket = this.buckets[index];
+    const bucket = this.#getBucket(key);
     const existingEl = bucket.find((el) => el.key === key);
 
     if (existingEl) {
       existingEl.value = value;
     } else {
       bucket.push({ key, value });
+      this.itemsStored++;
     }
   }
 
-  get(key) {}
+  get(key) {
+    const bucket = this.#getBucket(key);
+    const existingEl = bucket.find((el) => el.key === key);
+    return existingEl ? existingEl.value : null;
+  }
 
-  has(key) {}
+  has(key) {
+    const bucket = this.#getBucket(key);
+    const existingEl = bucket.find((el) => el.key === key);
+    return existingEl ? true : false;
+  }
 
-  remove(key) {}
+  remove(key) {
+    const bucket = this.#getBucket(key);
+    const itemIndex = bucket.indexOf((el) => el.key === key);
 
-  length() {}
+    if (itemIndex) {
+      bucket.splice(itemIndex, 1);
+      this.itemsStored--;
+      return true;
+    }
+    return false;
+  }
 
-  clear() {}
+  length() {
+    return this.itemsStored;
+  }
+
+  clear() {
+    this.#initializeBuckets();
+  }
 
   keys() {}
 
