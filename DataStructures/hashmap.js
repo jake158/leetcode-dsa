@@ -72,11 +72,35 @@ class HashMap {
     this.#initializeBuckets();
   }
 
-  keys() {}
+  keys() {
+    const keyArray = [];
+    for (const bucket of this.buckets) {
+      for (const element of bucket) {
+        keyArray.push(element.key);
+      }
+    }
+    return keyArray;
+  }
 
-  values() {}
+  values() {
+    const valArray = [];
+    for (const bucket of this.buckets) {
+      for (const element of bucket) {
+        valArray.push(element.value);
+      }
+    }
+    return valArray;
+  }
 
-  entries() {}
+  entries() {
+    const entArray = [];
+    for (const bucket of this.buckets) {
+      for (const element of bucket) {
+        entArray.push([element.key, element.value]);
+      }
+    }
+    return entArray;
+  }
 }
 
 const test = new HashMap();
