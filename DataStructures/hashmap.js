@@ -1,12 +1,12 @@
 class HashMap {
   constructor() {
     this.size = 16;
-    this.itemsStored = 0;
     this.loadFactor = 0.75;
     this.#initializeBuckets();
   }
 
   #initializeBuckets() {
+    this.itemsStored = 0;
     this.buckets = [];
     for (let i = 0; i < this.size; i++) {
       // Let's pretend these are linked lists
@@ -28,6 +28,22 @@ class HashMap {
     return this.buckets[index];
   }
 
+  #rebalance() {
+    if (this.itemsStored > this.size * this.loadFactor) {
+      console.log(this.buckets);
+      console.log('\nRebalancing...\n');
+
+      const currentEntries = this.entries();
+      this.size *= 2;
+      this.#initializeBuckets();
+      for (const [key, value] of currentEntries) {
+        this.set(key, value);
+      }
+
+      console.log(this.buckets);
+    }
+  }
+
   set(key, value) {
     const bucket = this.#getBucket(key);
     const existingEl = bucket.find((el) => el.key === key);
@@ -37,6 +53,7 @@ class HashMap {
     } else {
       bucket.push({ key, value });
       this.itemsStored++;
+      this.#rebalance();
     }
   }
 
@@ -117,3 +134,7 @@ test.set('ice cream', 'white');
 test.set('jacket', 'blue');
 test.set('kite', 'pink');
 test.set('lion', 'golden');
+test.set('lion', 'even more golden');
+
+// Causes rebalance:
+test.set('moon', 'silver');
