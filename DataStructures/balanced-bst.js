@@ -105,13 +105,46 @@ class Tree {
     return curr ?? -1;
   }
 
-  levelOrder(callback) {}
+  levelOrder(callback) {
+    const queue = [];
+    queue.push(this.root);
 
-  inOrder(callback) {}
+    while (queue.length !== 0) {
+      const curr = queue.shift();
+      if (curr) {
+        queue.push(curr.left);
+        queue.push(curr.right);
+        callback(curr);
+      }
+    }
+  }
 
-  preOrder(callback) {}
+  inOrder(callback, node = this.root) {
+    if (!node) {
+      return;
+    }
+    this.inOrder(callback, node.left);
+    callback(node);
+    this.inOrder(callback, node.right);
+  }
 
-  postOrder(callback) {}
+  preOrder(callback, node = this.root) {
+    if (!node) {
+      return;
+    }
+    this.inOrder(callback, node.left);
+    this.inOrder(callback, node.right);
+    callback(node);
+  }
+
+  postOrder(callback, node = this.root) {
+    if (!node) {
+      return;
+    }
+    callback(node);
+    this.inOrder(callback, node.left);
+    this.inOrder(callback, node.right);
+  }
 
   prettyPrint(node, prefix = '', isLeft = true) {
     if (node === null) {
@@ -136,3 +169,4 @@ const tree = new Tree(arr);
 tree.insert(-1);
 tree.deleteItem(8);
 tree.prettyPrint(tree.root);
+tree.inOrder((el) => console.log(el.data));
