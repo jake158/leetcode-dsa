@@ -9,7 +9,8 @@ class Node {
 class Tree {
   constructor(array) {
     const sorted = array.sort((a, b) => a - b);
-    this.root = this.buildTree(sorted, 0, sorted.length - 1);
+    const noDuplicates = [...new Set(sorted)];
+    this.root = this.buildTree(noDuplicates, 0, noDuplicates.length - 1);
   }
 
   buildTree(sortedArray, left, right) {
@@ -30,7 +31,10 @@ class Tree {
     let isLeftChild = null;
 
     while (curr) {
-      if (value <= curr.data) {
+      if (value === curr.data) {
+        // Item already exists
+        return;
+      } else if (value <= curr.data) {
         parent = curr;
         isLeftChild = true;
         curr = curr.left;
@@ -67,22 +71,47 @@ class Tree {
       }
     }
 
-    if (!parent) {
-      // Implement
+    if (!curr) {
+      // Item not found
       return;
     } else if (!curr.left && !curr.right) {
       parent[isLeftChild ? 'left' : 'right'] = null;
     } else if ((!curr.left && curr.right) || (!curr.right && curr.left)) {
       parent[isLeftChild ? 'left' : 'right'] = curr.right ?? curr.left;
     } else {
-      // Implement
       const smallestBiggerChild = this.#findSmallestNode(curr.right);
+      this.deleteItem(smallestBiggerChild.data);
+      curr.data = smallestBiggerChild.data;
     }
   }
 
   #findSmallestNode(subTree) {
     return subTree.left ? this.#findSmallestNode(subTree.left) : subTree;
   }
+
+  find(value) {
+    let curr = this.root;
+    let parent = null;
+
+    while (curr && curr.data != value) {
+      if (value <= curr.data) {
+        parent = curr;
+        curr = curr.left;
+      } else if (value > curr.data) {
+        parent = curr;
+        curr = curr.right;
+      }
+    }
+    return curr ?? -1;
+  }
+
+  levelOrder(callback) {}
+
+  inOrder(callback) {}
+
+  preOrder(callback) {}
+
+  postOrder(callback) {}
 
   prettyPrint(node, prefix = '', isLeft = true) {
     if (node === null) {
@@ -105,4 +134,5 @@ class Tree {
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(arr);
 tree.insert(-1);
+tree.deleteItem(8);
 tree.prettyPrint(tree.root);
