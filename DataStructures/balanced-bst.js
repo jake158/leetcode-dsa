@@ -146,6 +146,14 @@ class Tree {
     this.inOrder(callback, node.right);
   }
 
+  height(node) {
+    if (!node) {
+      return -1;
+    } else {
+      return 1 + Math.max(this.height(node.left), this.height(node.right));
+    }
+  }
+
   prettyPrint(node, prefix = '', isLeft = true) {
     if (node === null) {
       return;
@@ -169,4 +177,5 @@ const tree = new Tree(arr);
 tree.insert(-1);
 tree.deleteItem(8);
 tree.prettyPrint(tree.root);
-tree.inOrder((el) => console.log(el.data));
+// tree.inOrder((el) => console.log(el.data));
+console.log(tree.height(tree.find(9)));
